@@ -1,0 +1,1 @@
+{"timestamp":"1724428800000","openPrice":"0.1671","highestPrice":"0.179","lowestPrice":"0.1668","closingPrice":"0.1752","volume":"2335827.538289","volumeCurrency":"406300.9201283592","volumeCurrencyQuote":"406300.9201283592","klineUncompleted":true}

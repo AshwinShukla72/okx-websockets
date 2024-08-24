@@ -38,7 +38,7 @@ export const candlesticksDataFormatter = (response = {}) => {
 
     const requiredData = data[0]
     const [timestamp, openPrice, highestPrice, lowestPrice, closingPrice, volume, volumeCurrency, volumeCurrencyQuote, confirmed ] = requiredData
-    return {timestamp, openPrice, highestPrice, lowestPrice, closingPrice, volume, volumeCurrency, volumeCurrencyQuote, confirmed }
+    return {timestamp, openPrice, highestPrice, lowestPrice, closingPrice, volume, volumeCurrency, volumeCurrencyQuote, klineUncompleted : Boolean(confirmed)  }
   
   } catch (error) {
     console.log(`Error in ${functionName} -->`, error)

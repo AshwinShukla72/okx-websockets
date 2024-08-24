@@ -1,0 +1,9 @@
+{"timestamp":"1724492052000","openPrice":"0.1752","highestPrice":"0.1752","lowestPrice":"0.1752","closingPrice":"0.1752","volume":"0","volumeCurrency":"0","volumeCurrencyQuote":"0","klineUncompleted":true}
+{"timestamp":"1724492053000","openPrice":"0.1752","highestPrice":"0.1752","lowestPrice":"0.1752","closingPrice":"0.1752","volume":"0","volumeCurrency":"0","volumeCurrencyQuote":"0","klineUncompleted":true}
+{"timestamp":"1724492054000","openPrice":"0.1752","highestPrice":"0.1752","lowestPrice":"0.1752","closingPrice":"0.1752","volume":"0","volumeCurrency":"0","volumeCurrencyQuote":"0","klineUncompleted":true}
+{"timestamp":"1724492055000","openPrice":"0.1752","highestPrice":"0.1752","lowestPrice":"0.1752","closingPrice":"0.1752","volume":"0","volumeCurrency":"0","volumeCurrencyQuote":"0","klineUncompleted":true}
+{"timestamp":"1724492056000","openPrice":"0.1752","highestPrice":"0.1752","lowestPrice":"0.1752","closingPrice":"0.1752","volume":"0","volumeCurrency":"0","volumeCurrencyQuote":"0","klineUncompleted":true}
+{"timestamp":"1724492057000","openPrice":"0.1752","highestPrice":"0.1752","lowestPrice":"0.1752","closingPrice":"0.1752","volume":"0","volumeCurrency":"0","volumeCurrencyQuote":"0","klineUncompleted":true}
+{"timestamp":"1724492058000","openPrice":"0.1752","highestPrice":"0.1752","lowestPrice":"0.1752","closingPrice":"0.1752","volume":"0","volumeCurrency":"0","volumeCurrencyQuote":"0","klineUncompleted":true}
+{"timestamp":"1724492059000","openPrice":"0.1752","highestPrice":"0.1752","lowestPrice":"0.1752","closingPrice":"0.1752","volume":"0","volumeCurrency":"0","volumeCurrencyQuote":"0","klineUncompleted":true}
+{"timestamp":"1724492060000","openPrice":"0.1752","highestPrice":"0.1752","lowestPrice":"0.1752","closingPrice":"0.1752","volume":"0","volumeCurrency":"0","volumeCurrencyQuote":"0","klineUncompleted":true}
