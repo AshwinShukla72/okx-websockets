@@ -58,7 +58,7 @@ export const candlesticksDataFormatter = (response = {}) => {
       volume: Number(volume) || 0,
       volumeCurrency: Number(volumeCurrency) || 0,
       volumeCurrencyQuote: Number(volumeCurrencyQuote) || 0,
-      klineUncompleted: Boolean(confirmed) || 0,
+      klineIscompleted: Boolean(confirmed) || 0,
     };
   } catch (error) {
     console.log(`Error in ${functionName} -->`, error);
@@ -98,6 +98,30 @@ export const booksResponseFormatter = (response = {}) => {
       prevSeqId: requiredData.prevSeqId,
       currentSeqId: requiredData.seqId,
       checksum: requiredData.checksum,
+    };
+  } catch (error) {
+    console.log(`Error in ${functionName} -->`, error);
+  }
+};
+
+export const tradesDataFormatter = (response = {}) => {
+  const functionName = 'tradesFormatter';
+  try {
+    if (Object.keys(response) === 0) return null;
+    const {data} = response;
+    // Add checks for checking data array
+    if (!Array.isArray(data) || data.length == 0) {
+      return null;
+    }
+    const requiredData = data[0];
+    return {
+      instrumentId: requiredData.instId,
+      tradeId: Number(requiredData.tradeId),
+      tradePrice: Number(requiredData.px),
+      tradeSize: Number(requiredData.sz),
+      type: String(requiredData.side).toUpperCase(),
+      timestamp: requiredData.timestamp,
+      tradesAggregatedCount: Number(requiredData.count),
     };
   } catch (error) {
     console.log(`Error in ${functionName} -->`, error);

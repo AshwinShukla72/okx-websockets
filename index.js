@@ -1,6 +1,6 @@
 import WebSocket from "ws";
 import config from "./config.js";
-import { booksResponseFormatter, candlesticksDataFormatter, logsWriter } from "./helpers.js";
+import { booksResponseFormatter, candlesticksDataFormatter, logsWriter, tradesDataFormatter } from "./helpers.js";
 const { platformWebsocketsBasePath: { okxWsPublic, okxWsBusiness }} = config
 
 
@@ -15,7 +15,7 @@ export const subscribeToWsChannels = async (channels = [], url) => {
       ws.ping()
       console.log("ping sent")
     }
-    const chosenInstId = 'KLAY-USDT';
+    const chosenInstId = 'BTC-USDT';
     const subscriptionChannels = channels.map(e => ({ channel: e, instId: chosenInstId }));
 
     ws.on('open', () => {
@@ -34,15 +34,11 @@ export const subscribeToWsChannels = async (channels = [], url) => {
       let parsedData = {...JSON.parse(JSON.stringify(JSON.parse(data)))}
       
         if (parsedData.arg != null) {
-          if (parsedData.arg?.channel == 'books') {
-            logsWriter(booksResponseFormatter(parsedData), 'bookslog.txt')
-          } else if (parsedData.arg?.channel == 'candle1D') {
-            logsWriter(candlesticksDataFormatter(parsedData), 'candle1D.txt')
-          } else if (parsedData.arg?.channel == 'candle1s') {
-            logsWriter(candlesticksDataFormatter(parsedData), 'candle1s.txt')
-          }
+          if (parsedData.arg?.channel === 'books') logsWriter(booksResponseFormatter(parsedData), 'bookslog.txt')
+          else if (parsedData.arg?.channel === 'candle1D') logsWriter(candlesticksDataFormatter(parsedData), 'candle1D.txt') 
+          else if (parsedData.arg?.channel === 'candle1s') logsWriter(candlesticksDataFormatter(parsedData), 'candle1s.txt')
+          else if (parsedData.arg?.channel === 'trades') logsWriter(tradesDataFormatter(parsedData), 'trades.txt')
         }
- 
 
     })
 
@@ -60,7 +56,7 @@ export const subscribeToWsChannels = async (channels = [], url) => {
 }
 
 try {
-  await subscribeToWsChannels(['books'], okxWsPublic) // ], okxWsPublic)
+  await subscribeToWsChannels(['books', 'trades'], okxWsPublic) // ], okxWsPublic)
   await subscribeToWsChannels(['candle1D', 'candle1s'], okxWsBusiness)
 } catch (error) {
   console.log(error)
