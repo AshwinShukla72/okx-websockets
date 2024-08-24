@@ -30,20 +30,41 @@ export const bidsFormatter = (bids) => {
   }
 };
 export const candlesticksDataFormatter = (response = {}) => {
-  const functionName = 'candlesticksDataFormatter'
+  const functionName = 'candlesticksDataFormatter';
   try {
     if (Object.keys(response) === 0) return null;
     const {data} = response;
     if (!Array.isArray(data) || data.length == 0) return null;
 
-    const requiredData = data[0]
-    const [timestamp, openPrice, highestPrice, lowestPrice, closingPrice, volume, volumeCurrency, volumeCurrencyQuote, confirmed ] = requiredData
-    return {timestamp, openPrice, highestPrice, lowestPrice, closingPrice, volume, volumeCurrency, volumeCurrencyQuote, klineUncompleted : Boolean(confirmed)  }
-  
+    const requiredData = data[0];
+    const [
+      timestamp,
+      openPrice,
+      highestPrice,
+      lowestPrice,
+      closingPrice,
+      volume,
+      volumeCurrency,
+      volumeCurrencyQuote,
+      confirmed,
+    ] = requiredData;
+    
+    return {
+      timestamp,
+      openPrice: Number(openPrice) || 0,
+      highestPrice: Number(highestPrice) || 0,
+      lowestPrice: Number(lowestPrice) || 0,
+      closingPrice: Number(closingPrice) || 0,
+      volume: Number(volume) || 0,
+      volumeCurrency: Number(volumeCurrency) || 0,
+      volumeCurrencyQuote: Number(volumeCurrencyQuote) || 0,
+      klineUncompleted: Boolean(confirmed) || 0,
+    };
   } catch (error) {
-    console.log(`Error in ${functionName} -->`, error)
+    console.log(`Error in ${functionName} -->`, error);
   }
-}
+};
+
 // ! valid timestamp format ?
 export const timestampFormatter = (timestamp, dateFormat = 'DD-MM-YYYY HH:mm:ss') => {
   const functionName = 'timestampFormatter';
