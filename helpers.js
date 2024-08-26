@@ -1,6 +1,6 @@
 import {fromUnixTime, format} from 'date-fns';
 import path from 'node:path';
-import { existsSync, mkdirSync, appendFile } from 'node:fs'
+import {existsSync, mkdirSync, appendFile} from 'node:fs';
 
 // asks formatter ---------------
 export const asksFormatter = (asks) => {
@@ -48,7 +48,7 @@ export const candlesticksDataFormatter = (response = {}) => {
       volumeCurrencyQuote,
       confirmed,
     ] = requiredData;
-    
+
     return {
       timestamp,
       openPrice: Number(openPrice) || 0,
@@ -129,11 +129,11 @@ export const tradesDataFormatter = (response = {}) => {
 };
 
 export const logsWriter = (response, logFileName = 'wslogs.txt') => {
-  const functionName = "logsWriter"
+  const functionName = 'logsWriter';
   try {
     if (!response) return null;
     // Create logs directory if not present
-    const directory = './logs'
+    const directory = './logs';
     // if (!existsSync(directory)) mkdirSync(directory)
     const logsDirectory = directory;
 
@@ -144,6 +144,102 @@ export const logsWriter = (response, logFileName = 'wslogs.txt') => {
       if (err) console.error('Failed to write log:', err);
       // console.log(`Writing in ${logFileName}`);
     });
+  } catch (error) {
+    console.log(`Error in ${functionName} -->`, error);
+  }
+};
+
+export const snapShotMapper = (snapShot = {}) => {
+  const functionName = 'snapShotMapper';
+  try {
+    if (Object.keys(snapShot).length == 0) return [];
+    const {data} = snapShot;
+    const {asks, bids, prevSeqId, ts, checksum, seqId} = data[0];
+    if (prevSeqId != -1) return [];
+
+    // Create Order Book
+    let orderBook = {
+      asks: new Map(),
+      bids: new Map(),
+    };
+    orderBook.asks.clear();
+    orderBook.bids.clear();
+    // populate asks in order book
+    for (let ask of asks) {
+      const [price, size, , orderId] = ask;
+      orderBook.asks.set(price, {size, orderId});
+    }
+    // populate bids in order book
+    for (let bid of bids) {
+      const [price, size, , orderId] = bid;
+      orderBook.bids.set(price, {size, orderId});
+    }
+    // Custom orderBid
+    // orderBook.bids.set('0.1701', {size: '12', orderId: '123'})
+    // orderBook.bids.set('0.16842', {size: '10202.12', orderId: '123'})
+
+    return {...orderBook, ts, checksum, prevSeqId, seqId};
+  } catch (error) {
+    console.log(`Error in ${functionName} -->`, error);
+  }
+};
+
+export const convertToSnapshot = (orderBook = {}) => {
+  let asks = [],
+    bids = [];
+  const {prevSeqId, ts, checksum, seqId} = orderBook;
+  if (Object.keys(orderBook).length === 0) return '';
+  for (let [price, {size, orderId}] of orderBook.asks) {
+    asks.push([price, size, '0', orderId]);
+  }
+  for (let [price, {size, orderId}] of orderBook.bids) {
+    bids.push([price, size, '0', orderId]);
+  }
+
+  return {prevSeqId, ts, checksum, seqId, asks, bids};
+};
+
+export const updateOrderBook = (orderBook = {}, updates = {}) => {
+  const functionName = 'updateOrderBook';
+  try {
+    const currentOrderBook = orderBook;
+    // Initial Checks -->
+    if (Object.keys(currentOrderBook).length === 0 || Object.keys(updates).length === 0) return null;
+    const {data} = updates;
+    if (data.length === 0) return null;
+    const {asks, bids} = data[0];
+
+    // Asks loop
+    if (asks.length > 0) {
+      for (let [price, size, , orderId] of asks) {
+        if (size === '0') {
+          logsWriter(`Deleting Ask: ${price}, ${JSON.stringify(currentOrderBook.asks.get(price))}`, 'asks.txt');
+          currentOrderBook.asks.delete(price);
+        } else {
+          currentOrderBook.asks.set(price, {size, orderId});
+          logsWriter(`Updating/Adding Ask: ${price}, ${JSON.stringify(currentOrderBook.asks.get(price))}`, 'asks.txt');
+        }
+      }
+    }
+
+    // Bids loop
+    if (bids.length > 0) {
+      for (let [price, size, , orderId] of bids) {
+        if (size === '0') {
+          logsWriter(`Deleting Bid: ${price}, ${JSON.stringify(currentOrderBook.bids.get(price))}`, 'bids.txt');
+          currentOrderBook.bids.delete(price);
+        } else {
+          currentOrderBook.bids.set(price, {size, orderId});
+          logsWriter(`Updating/Adding Bid: ${price}, ${JSON.stringify(currentOrderBook.bids.get(price))}`, 'bids.txt');
+        }
+      }
+    }
+    // Sort the order books
+    currentOrderBook.asks = new Map([...currentOrderBook.asks].sort((a, b) => parseFloat(a[0]) - parseFloat(b[0])));
+
+    currentOrderBook.bids = new Map([...currentOrderBook.bids].sort((a, b) => parseFloat(b[0]) - parseFloat(a[0])));
+
+    return currentOrderBook;
   } catch (error) {
     console.log(`Error in ${functionName} -->`, error);
   }
