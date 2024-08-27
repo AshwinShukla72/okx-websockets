@@ -44,7 +44,7 @@ export const subscribeToWsChannels = async (channels = [], url) => {
             } else if (parsedData.action === 'update') {
               if (!Array.isArray(initialSnapShot)) {
                 let updatedOrderBook = updateOrderBook(initialSnapShot, parsedData)
-                logsWriter(convertToSnapshot(updatedOrderBook), 'updatedSnaps.json')
+                console.log("Snapshot -->",convertToSnapshot(updatedOrderBook)) //, 'updatedSnaps.json')
               }
             }
           } 
